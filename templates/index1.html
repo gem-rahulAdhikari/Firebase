@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Realtime Communication with Flask and Firebase</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-database.js"></script>
+</head>
+<body>
+	<textarea id="message-input"></textarea>
+	<button id="send-button">Send</button>
+	<div id="messages-container"></div>
+
+	<script>
+		var firebaseConfig = {
+		  apiKey: "AIzaSyCTjZFh1R-HgF-TTspx3S3T2d7BOPjJnGM",
+  authDomain: "flask-app-b27bb.firebaseapp.com",
+  databaseURL: "https://flask-app-b27bb-default-rtdb.firebaseio.com",
+  projectId: "flask-app-b27bb",
+  storageBucket: "flask-app-b27bb.appspot.com",
+  messagingSenderId: "643677151622",
+  appId: "1:643677151622:web:ea58239d04fc0415e88c07",
+  measurementId: "G-EZH5DP62QM"
+		};
+
+
+
+    
+		// Initialize Firebase
+		firebase.initializeApp(firebaseConfig);
+
+		// Get a reference to the Realtime Database
+		var db = firebase.database();
+
+		var messageInput = document.getElementById('message-input');
+
+		document.getElementById('send-button').addEventListener('click', function() {
+			var message = messageInput.value;
+			db.ref('messages').push({
+				message: message
+			});
+			messageInput.value = '';
+		});
+
+		db.ref('messages').on('child_added', function(data) {
+			var message = data.val().message;
+			var messagesContainer = document.getElementById('messages-container');
+			messagesContainer.innerHTML += '<p>' + message + '</p>';
+		});
+	</script>
+</body>
+</html>
